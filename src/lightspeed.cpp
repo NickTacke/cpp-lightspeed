@@ -1,5 +1,27 @@
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "lightspeed.h"
+#include "httplib/httplib.h"
+
+namespace {
+// Helper to build query parameter string
+std::string build_query_params(
+    const std::vector<std::pair<std::string, std::string>> &queryParams) {
+  // If no query params, return empty string
+  if (queryParams.empty()) {
+    return "";
+  }
+
+  // Build query string
+  std::string query_string = "?";
+  for (size_t i = 0; i < queryParams.size(); i++) {
+    query_string += queryParams[i].first + "=" + queryParams[i].second;
+    if (i < queryParams.size() - 1) {
+      query_string += "&";
+    }
+  }
+  return query_string;
+}
+} // namespace
 
 LightspeedApi::LightspeedApi(const std::string &apiKey,
                              const std::string &apiSecret, Cluster cluster,
@@ -24,6 +46,51 @@ std::string LightspeedApi::getFullPath(const std::string &endpoint) const {
   return baseUrlPath_ + effective_endpoint;
 }
 
-std::string LightspeedApi::performRequest() {
-  // TODO: Implement
+std::string LightspeedApi::performRequest(
+    const std::string &method, const std::string &endpoint,
+    const std::string &body,
+    const std::vector<std::pair<std::string, std::string>> &queryParams) {
+  // Initialize the httplib client
+  httplib::SSLClient client(baseUrlHost_);
+  client.set_default_headers(
+      {{"Authorization", "Basic " + httplib::detail::base64_encode(
+                                        apiKey_ + ":" + apiSecret_)}});
+  client.set_connection_timeout(10, 0);
+  client.set_read_timeout(30, 0);
+  client.enable_server_certificate_verification(true);
+
+  // Build the full path with query parameters
+  std::string full_path_with_query =
+      getFullPath(endpoint) + build_query_params(queryParams);
+
+  // Perform the request
+  httplib::Result result;
+  if (method == "GET") {
+    result = client.Get(full_path_with_query.c_str());
+  } else if (method == "POST") {
+    result =
+        client.Post(full_path_with_query.c_str(), body, "application/json");
+  } else if (method == "PUT") {
+    result = client.Put(full_path_with_query.c_str(), body, "application/json");
+  } else if (method == "DELETE") {
+    result = client.Delete(full_path_with_query.c_str());
+  } else {
+    throw std::invalid_argument("Unsupported HTTP method: " + method);
+  }
+
+  // Check if the request failed
+  if (!result) {
+    auto err = result.error();
+    std::string error_msg = httplib::to_string(err);
+    std::cerr << "HTTP Request failed: " << error_msg << std::endl;
+    throw std::runtime_error("Request failed: " + error_msg);
+  }
+
+  // Check the response code
+  if (result->status >= 200 && result->status < 300) {
+    return result->body;
+  } else {
+    std::cerr << "Unsupported response code: " << result->status << std::endl;
+    throw std::runtime_error("Request failed: " + result->body);
+  }
 }
