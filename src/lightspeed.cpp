@@ -3,6 +3,24 @@
 #include "httplib/httplib.h"
 
 namespace {
+// Helper to parse a full URL into scheme, host and base path
+struct ParsedUrl {
+  std::string scheme;
+  std::string host;
+  std::string path;
+};
+
+ParsedUrl parse_url(const std::string &url_string) {
+  std::regex url_regex(R"(([^:]+)://([^/]+)(/.*)?)");
+  std::smatch match;
+  // Check if the URL matches the expected format
+  if (std::regex_match(url_string, match, url_regex)) {
+    return {match[1].str(), match[2].str(),
+            match[3].matched ? match[3].str() : "/"};
+  }
+  throw std::invalid_argument("Invalid URL: " + url_string);
+}
+
 // Helper to build query parameter string
 std::string build_query_params(
     const std::vector<std::pair<std::string, std::string>> &queryParams) {
@@ -21,6 +39,7 @@ std::string build_query_params(
   }
   return query_string;
 }
+
 } // namespace
 
 LightspeedApi::LightspeedApi(const std::string &apiKey,
