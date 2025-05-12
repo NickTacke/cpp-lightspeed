@@ -16,7 +16,12 @@ LightspeedApi::LightspeedApi(const std::string &apiKey,
 }
 
 std::string LightspeedApi::getFullPath(const std::string &endpoint) const {
-  // TODO: Implement
+  std::string effective_endpoint = endpoint;
+  // Remove leading slash if present
+  if (!endpoint.empty() && endpoint.front() == '/') {
+    effective_endpoint = endpoint.substr(1);
+  }
+  return baseUrlPath_ + effective_endpoint;
 }
 
 std::string LightspeedApi::performRequest() {
