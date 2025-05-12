@@ -7,6 +7,9 @@
 
 class LightspeedApi; // Forward declaration
 
+namespace Lightspeed {
+namespace endpoints {
+
 class ProductsEndpoint {
 public:
   ProductsEndpoint(LightspeedApi &api);
@@ -26,5 +29,8 @@ public:
 private:
   LightspeedApi &api_;
 };
+
+} // namespace endpoints
+} // namespace Lightspeed
 
 #endif // LIGHTSPEED_PRODUCTS_H
