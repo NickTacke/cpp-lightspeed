@@ -5,6 +5,7 @@
 #include <vector>
 
 // Endpoint includes
+#include "endpoints/account.h"
 #include "endpoints/products.h"
 
 class LightspeedApi {
@@ -37,7 +38,8 @@ public:
       const std::vector<std::pair<std::string, std::string>> &queryParams = {});
 
   // Endpoints
-  ProductsEndpoint products;
+  Lightspeed::endpoints::AccountEndpoint account;
+  Lightspeed::endpoints::ProductsEndpoint products;
 
 private:
   std::string apiKey_;
