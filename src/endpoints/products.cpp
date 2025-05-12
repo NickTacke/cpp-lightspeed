@@ -1,5 +1,5 @@
-#include "products.h"
-#include "lightspeed.h"
+#include "../../include/endpoints/products.h"
+#include "../../include/lightspeed.h"
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
