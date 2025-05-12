@@ -14,6 +14,15 @@ public:
   // Corresponds to GET /products.json?page={page}&limit=250
   std::vector<Lightspeed::dto::Product> getPage(int page);
 
+  // Corresponds to GET /products/count.json
+  int getCount();
+
+  // Corresponds to GET /products/{id}.json
+  Lightspeed::dto::Product get(int id);
+
+  // Corresponds to POST /products.json
+  Lightspeed::dto::Product create(Lightspeed::dto::Product product);
+
 private:
   LightspeedApi &api_;
 };
