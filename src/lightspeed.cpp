@@ -45,7 +45,7 @@ std::string build_query_params(
 LightspeedApi::LightspeedApi(const std::string &apiKey,
                              const std::string &apiSecret, Cluster cluster,
                              const std::string &language)
-    : apiKey_(apiKey), apiSecret_(apiSecret) {
+    : apiKey_(apiKey), apiSecret_(apiSecret), products(*this) {
   std::string clusterBaseHost;
   switch (cluster) {
   case Cluster::EU1:
@@ -64,7 +64,7 @@ LightspeedApi::LightspeedApi(const std::string &apiKey,
 LightspeedApi::LightspeedApi(const std::string &apiKey,
                              const std::string &apiSecret,
                              const std::string &customBaseUrl)
-    : apiKey_(apiKey), apiSecret_(apiSecret) {
+    : apiKey_(apiKey), apiSecret_(apiSecret), products(*this) {
   if (customBaseUrl.empty()) {
     throw std::invalid_argument("Custom base URL cannot be empty");
   }
