@@ -22,7 +22,10 @@ private:
   std::string baseUrlPath_;
 
   std::string getFullPath(const std::string &endpoint) const;
-  std::string performRequest(); // TODO: Implement
+  std::string performRequest(
+      const std::string &method, const std::string &endpoint,
+      const std::string &body,
+      const std::vector<std::pair<std::string, std::string>> &queryParams);
 };
 
 #endif
