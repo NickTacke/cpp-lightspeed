@@ -18,6 +18,23 @@ struct Product {
   std::string fulltitle;
   std::string description;
   std::string content;
+
+  std::string toJson() const {
+    nlohmann::json wrapper;
+    wrapper["product"] = {
+      {"id", id},
+      {"createdAt", createdAt},
+      {"updatedAt", updatedAt},
+      {"isVisible", isVisible},
+      {"visibility", visibility},
+      {"url", url},
+      {"title", title},
+      {"fulltitle", fulltitle},
+      {"description", description},
+      {"content", content}
+    };
+    return wrapper.dump();
+  }
 };
 
 inline void from_json(const nlohmann::json &j, Product &p) {
