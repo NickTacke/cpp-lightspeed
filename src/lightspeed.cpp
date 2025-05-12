@@ -65,7 +65,16 @@ LightspeedApi::LightspeedApi(const std::string &apiKey,
                              const std::string &apiSecret,
                              const std::string &customBaseUrl)
     : apiKey_(apiKey), apiSecret_(apiSecret) {
-  // TODO: Implement
+  if (customBaseUrl.empty()) {
+    throw std::invalid_argument("Custom base URL cannot be empty");
+  }
+  ParsedUrl parsed = parse_url(customBaseUrl);
+  baseUrlHost_ = parsed.host;
+  baseUrlPath_ = parsed.path;
+  // Ensure the path ends with a slash
+  if (baseUrlPath_.back() != '/') {
+    baseUrlPath_ += '/';
+  }
 }
 
 std::string LightspeedApi::getFullPath(const std::string &endpoint) const {
