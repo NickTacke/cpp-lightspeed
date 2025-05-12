@@ -134,3 +134,27 @@ std::string LightspeedApi::performRequest(
     throw std::runtime_error("Request failed: " + result->body);
   }
 }
+
+std::string LightspeedApi::performGetRequest(
+    const std::string &endpoint,
+    const std::vector<std::pair<std::string, std::string>> &queryParams) {
+  return performRequest("GET", endpoint, "", queryParams);
+}
+
+std::string LightspeedApi::performPostRequest(
+    const std::string &endpoint, const std::string &body,
+    const std::vector<std::pair<std::string, std::string>> &queryParams) {
+  return performRequest("POST", endpoint, body, queryParams);
+}
+
+std::string LightspeedApi::performPutRequest(
+    const std::string &endpoint, const std::string &body,
+    const std::vector<std::pair<std::string, std::string>> &queryParams) {
+  return performRequest("PUT", endpoint, body, queryParams);
+}
+
+std::string LightspeedApi::performDeleteRequest(
+    const std::string &endpoint,
+    const std::vector<std::pair<std::string, std::string>> &queryParams) {
+  return performRequest("DELETE", endpoint, "", queryParams);
+}
