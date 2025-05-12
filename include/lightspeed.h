@@ -5,6 +5,7 @@
 #include <vector>
 
 // Endpoint includes
+#include "endpoints/products.h"
 
 class LightspeedApi {
 public:
@@ -34,6 +35,9 @@ public:
   std::string performDeleteRequest(
       const std::string &endpoint,
       const std::vector<std::pair<std::string, std::string>> &queryParams = {});
+
+  // Endpoints
+  ProductsEndpoint products;
 
 private:
   std::string apiKey_;
