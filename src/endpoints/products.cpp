@@ -7,6 +7,9 @@
 #include <string>
 #include <vector>
 
+namespace Lightspeed {
+namespace endpoints {
+
 ProductsEndpoint::ProductsEndpoint(LightspeedApi &api) : api_(api) {}
 
 std::vector<Lightspeed::dto::Product> ProductsEndpoint::getPage(int page) {
@@ -36,3 +39,6 @@ Lightspeed::dto::Product ProductsEndpoint::create(Lightspeed::dto::Product produ
   auto json = nlohmann::json::parse(productJson);
   return json.at("product").get<Lightspeed::dto::Product>();
 }
+
+} // namespace endpoints
+} // namespace Lightspeed
