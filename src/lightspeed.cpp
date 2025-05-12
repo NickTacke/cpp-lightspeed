@@ -27,7 +27,19 @@ LightspeedApi::LightspeedApi(const std::string &apiKey,
                              const std::string &apiSecret, Cluster cluster,
                              const std::string &language)
     : apiKey_(apiKey), apiSecret_(apiSecret) {
-  // TODO: Implement
+  std::string clusterBaseHost;
+  switch (cluster) {
+  case Cluster::EU1:
+    clusterBaseHost = "api.webshopapp.com";
+    break;
+  case Cluster::US1:
+    clusterBaseHost = "api.shoplightspeed.com";
+    break;
+  default:
+    throw std::runtime_error("Invalid cluster specified");
+  }
+  baseUrlHost_ = clusterBaseHost;
+  baseUrlPath_ = "/" + language + "/";
 }
 
 LightspeedApi::LightspeedApi(const std::string &apiKey,
