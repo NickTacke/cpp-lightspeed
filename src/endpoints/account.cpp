@@ -1,7 +1,6 @@
 // Relative paths for library files
-#include "../../include/endpoints/account.h"
-#include "../../include/dtos/Account.h"
 #include "../../include/lightspeed.h"
+#include "../../include/endpoints/account.h"
 
 #include <nlohmann/json.hpp>
 #include <string>
