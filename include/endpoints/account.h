@@ -1,7 +1,6 @@
 #ifndef LIGHTSPEED_ENDPOINTS_ACCOUNT_H
 #define LIGHTSPEED_ENDPOINTS_ACCOUNT_H
 
-#include "../lightspeed.h"
 #include "../dtos/Account.h"
 
 class LightspeedApi; // Forward declaration
