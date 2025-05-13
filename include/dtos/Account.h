@@ -2,6 +2,10 @@
 #define LIGHTSPEED_DTOS_ACCOUNT_H
 
 #include "./Resource.h" // Relative path
+#include "./AccountMetafields.h"
+#include "./AccountPermissions.h"
+#include "./AccountRateLimits.h"
+
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -13,10 +17,9 @@ public:
   int id;
   int appId;
   std::string apiKey;
-  Lightspeed::dto::Resource signout;
-  Lightspeed::dto::Resource permissions;
-  Lightspeed::dto::Resource ratelimit;
-  Lightspeed::dto::Resource metafields;
+  Resource<std::vector<AccountMetafield>> metafields;
+  Resource<AccountPermissions> permissions;
+  Resource<AccountRateLimits> rateLimits;
 
   std::string toJson() const {
     nlohmann::json wrapper;
@@ -24,6 +27,9 @@ public:
       {"id", id},
       {"appId", appId},
       {"apiKey", apiKey},
+      {"metafields", metafields.toJson()},
+      {"permissions", permissions.toJson()},
+      {"ratelimit", rateLimits.toJson()}
     };
     return wrapper.dump();
   }
@@ -33,10 +39,9 @@ inline void from_json(const nlohmann::json &j, Account &a) {
   j.at("id").get_to(a.id);
   j.at("appId").get_to(a.appId);
   j.at("apiKey").get_to(a.apiKey);
-  j.at("signout").get_to(a.signout);
-  j.at("permissions").get_to(a.permissions);
-  j.at("ratelimit").get_to(a.ratelimit);
   j.at("metafields").get_to(a.metafields);
+  j.at("permissions").get_to(a.permissions);
+  j.at("ratelimit").get_to(a.rateLimits);
 }
 
 } // namespace dto
