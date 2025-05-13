@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Define the library
 add_library(cpp-lightspeed STATIC
     src/lightspeed.cpp
+    src/endpoints/account.cpp
     src/endpoints/products.cpp
 )
 
