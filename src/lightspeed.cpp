@@ -1,6 +1,7 @@
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "lightspeed.h"
 #include "httplib/httplib.h"
+#include <nlohmann/json.hpp>
 
 namespace {
 // Helper to parse a full URL into scheme, host and base path
@@ -128,6 +129,8 @@ std::string LightspeedApi::performRequest(
 
   // Check the response code
   if (result->status >= 200 && result->status < 300) {
+    // TODO: Remove after debugging
+    std::cout << "Response body: " << result->body << std::endl;
     return result->body;
   } else {
     std::cerr << "Unsupported response code: " << result->status << std::endl;
