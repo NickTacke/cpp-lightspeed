@@ -1,6 +1,7 @@
 #ifndef LIGHTSPEED_H
 #define LIGHTSPEED_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -41,6 +42,10 @@ public:
   Lightspeed::endpoints::AccountEndpoint account;
   Lightspeed::endpoints::ProductsEndpoint products;
 
+  // Expose templated resource fetcher publicly
+  template<typename T>
+  T getResource(const Lightspeed::dto::Resource<T>& res);
+
 private:
   std::string apiKey_;
   std::string apiSecret_;
@@ -58,3 +63,14 @@ private:
 };
 
 #endif
+
+// Inline definition of templated getResource (must live in header)
+#include <nlohmann/json.hpp>
+template<typename T>
+T LightspeedApi::getResource(const Lightspeed::dto::Resource<T>& res) {
+  auto body = performGetRequest(res.url + ".json");
+  nlohmann::json j = nlohmann::json::parse(body);
+  if (j.size() == 1 && (j.begin().value().is_object() || j.begin().value().is_array()))
+    return j.begin().value().template get<T>();
+  return j.template get<T>();
+}
