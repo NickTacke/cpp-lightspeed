@@ -13,6 +13,7 @@ public:
   int id;
   int appId;
   std::string apiKey;
+  Lightspeed::dto::Resource signout;
   Lightspeed::dto::Resource permissions;
   Lightspeed::dto::Resource ratelimit;
   Lightspeed::dto::Resource metafields;
@@ -23,9 +24,6 @@ public:
       {"id", id},
       {"appId", appId},
       {"apiKey", apiKey},
-      {"permissions", permissions.toJson()},
-      {"ratelimit", ratelimit.toJson()},
-      {"metafields", metafields.toJson()}
     };
     return wrapper.dump();
   }
@@ -35,6 +33,7 @@ inline void from_json(const nlohmann::json &j, Account &a) {
   j.at("id").get_to(a.id);
   j.at("appId").get_to(a.appId);
   j.at("apiKey").get_to(a.apiKey);
+  j.at("signout").get_to(a.signout);
   j.at("permissions").get_to(a.permissions);
   j.at("ratelimit").get_to(a.ratelimit);
   j.at("metafields").get_to(a.metafields);
