@@ -25,9 +25,10 @@ public:
 };
 
 inline void from_json(const nlohmann::json &j, Resource &r) {
-  j.at("id").get_to(r.id);
-  j.at("url").get_to(r.url);
-  j.at("link").get_to(r.link);
+  const nlohmann::json &resource = j.at("resource");
+  resource.at("id").get_to(r.id);
+  resource.at("url").get_to(r.url);
+  resource.at("link").get_to(r.link);
 }
 
 } // namespace dto
