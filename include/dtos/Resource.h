@@ -7,6 +7,7 @@
 namespace Lightspeed {
 namespace dto {
 
+template<typename T>
 class Resource {
 public:
   int id;
@@ -24,7 +25,9 @@ public:
   }
 };
 
-inline void from_json(const nlohmann::json &j, Resource &r) {
+// JSON deserialization for Resource<T>
+template<typename T>
+inline void from_json(const nlohmann::json &j, Resource<T> &r) {
   const nlohmann::json &resource = j.at("resource");
   resource.at("id").get_to(r.id);
   resource.at("url").get_to(r.url);
