@@ -7,11 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Define the library
-add_library(cpp-lightspeed STATIC
-    src/lightspeed.cpp
-    src/endpoints/account.cpp
-    src/endpoints/products.cpp
+file(GLOB_RECURSE LIGHTSPEED_SOURCES CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
+add_library(cpp-lightspeed STATIC ${LIGHTSPEED_SOURCES})
 
 # Specify the include directories for the library
 target_include_directories(cpp-lightspeed
