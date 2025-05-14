@@ -22,6 +22,14 @@ inline void from_json(const nlohmann::json &j, Type &t) {
     j.at("attributes").get_to(t.attributes);
 }
 
+inline void to_json(nlohmann::json &j, const Type &t) {
+    j = nlohmann::json{
+        {"id", t.id},
+        {"title", t.title},
+        {"attributes", t.attributes}
+    };
+}
+
 } // namespace dto
 } // namespace Lightspeed
 
