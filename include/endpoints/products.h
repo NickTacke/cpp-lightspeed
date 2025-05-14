@@ -2,6 +2,8 @@
 #define LIGHTSPEED_PRODUCTS_H
 
 #include "../dto/Product.h"
+#include "../dto/Count.h"
+
 #include <string>
 #include <vector>
 
