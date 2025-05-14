@@ -13,16 +13,6 @@ public:
   int id;
   std::string url;
   std::string link;
-
-  std::string toJson() const {
-    nlohmann::json wrapper;
-    wrapper["resource"] = {
-      {"id", id},
-      {"url", url},
-      {"link", link}
-    };
-    return wrapper.dump();
-  }
 };
 
 // JSON deserialization for Resource<T>
@@ -32,6 +22,17 @@ inline void from_json(const nlohmann::json &j, Resource<T> &r) {
   resource.at("id").get_to(r.id);
   resource.at("url").get_to(r.url);
   resource.at("link").get_to(r.link);
+}
+
+template<typename T>
+inline void to_json(nlohmann::json &j, const Resource<T> &r) {
+  j = nlohmann::json{
+    {"resource", {
+      {"id", r.id},
+      {"url", r.url},
+      {"link", r.link}
+    }}
+  };
 }
 
 } // namespace dto
