@@ -154,13 +154,7 @@ std::string LightspeedApi::performRequest(
   }
 
   // Check the response code
-  if (result->status >= 200 && result->status < 300) {
-    // Print response headers
-    std::cout << "Response headers:" << std::endl;
-    for (const auto &header : result->headers) {
-      std::cout << header.first << ": " << header.second << std::endl;
-    }
-    
+  if (result->status >= 200 && result->status < 300) { 
     // Parse and store rate limit information
     std::string rate_limit_limit_str = result->get_header_value("X-RateLimit-Limit");
     std::string rate_limit_remaining_str = result->get_header_value("X-RateLimit-Remaining");
