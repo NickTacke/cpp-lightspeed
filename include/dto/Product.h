@@ -18,23 +18,6 @@ struct Product {
   std::string fulltitle;
   std::string description;
   std::string content;
-
-  std::string toJson() const {
-    nlohmann::json wrapper;
-    wrapper["product"] = {
-      {"id", id},
-      {"createdAt", createdAt},
-      {"updatedAt", updatedAt},
-      {"isVisible", isVisible},
-      {"visibility", visibility},
-      {"url", url},
-      {"title", title},
-      {"fulltitle", fulltitle},
-      {"description", description},
-      {"content", content}
-    };
-    return wrapper.dump();
-  }
 };
 
 inline void from_json(const nlohmann::json &j, Product &p) {
@@ -48,6 +31,21 @@ inline void from_json(const nlohmann::json &j, Product &p) {
   j.at("fulltitle").get_to(p.fulltitle);
   j.at("description").get_to(p.description);
   j.at("content").get_to(p.content);
+}
+
+inline void to_json(nlohmann::json &j, const Product &p) {
+  j = nlohmann::json{
+    {"id", p.id},
+    {"createdAt", p.createdAt},
+    {"updatedAt", p.updatedAt},
+    {"isVisible", p.isVisible},
+    {"visibility", p.visibility},
+    {"url", p.url},
+    {"title", p.title},
+    {"fulltitle", p.fulltitle},
+    {"description", p.description},
+    {"content", p.content}
+  };
 }
 
 } // namespace dto
