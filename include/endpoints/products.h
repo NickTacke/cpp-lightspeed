@@ -1,7 +1,7 @@
 #ifndef LIGHTSPEED_PRODUCTS_H
 #define LIGHTSPEED_PRODUCTS_H
 
-#include "dtos/Product.h"
+#include "../dto/Product.h"
 #include <string>
 #include <vector>
 

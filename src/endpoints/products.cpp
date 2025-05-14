@@ -1,6 +1,6 @@
 // Relative paths for library files
 #include "../../include/endpoints/products.h"
-#include "../../include/dtos/Product.h"
+#include "../../include/dto/Product.h"
 #include "../../include/lightspeed.h"
 
 #include <nlohmann/json.hpp>

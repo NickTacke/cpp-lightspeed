@@ -3,7 +3,7 @@
 
 // Forward-declare API and include DTO definition
 class LightspeedApi;
-#include "../dtos/Account.h"
+#include "../dto/Account.h"
 
 namespace Lightspeed {
 namespace endpoints {
