@@ -4,6 +4,9 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+#include "Resource.h"
+#include "Variant.h"
+
 namespace Lightspeed {
 namespace dto {
 
@@ -18,6 +21,7 @@ struct Product {
   std::string fulltitle;
   std::string description;
   std::string content;
+  Resource<std::vector<Variant>> variants;
 };
 
 inline void from_json(const nlohmann::json &j, Product &p) {
@@ -31,6 +35,7 @@ inline void from_json(const nlohmann::json &j, Product &p) {
   j.at("fulltitle").get_to(p.fulltitle);
   j.at("description").get_to(p.description);
   j.at("content").get_to(p.content);
+  j.at("variants").get_to(p.variants);
 }
 
 inline void to_json(nlohmann::json &j, const Product &p) {
@@ -44,7 +49,8 @@ inline void to_json(nlohmann::json &j, const Product &p) {
     {"title", p.title},
     {"fulltitle", p.fulltitle},
     {"description", p.description},
-    {"content", p.content}
+    {"content", p.content},
+    {"variants", p.variants}
   };
 }
 
