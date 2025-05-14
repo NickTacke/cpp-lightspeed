@@ -18,6 +18,13 @@ inline void from_json(const nlohmann::json &j, Permission &p) {
   j.at("write").get_to(p.write);
 }
 
+inline void to_json(nlohmann::json &j, const Permission &p) {
+  j = nlohmann::json{
+    {"read", p.read ? true : false},
+    {"write", p.write ? true : false}
+  };
+}
+
 struct AccountPermissions {
 public:
   Permission content;
@@ -36,6 +43,17 @@ inline void from_json(const nlohmann::json &j, AccountPermissions &f) {
   j.at("orders").get_to(f.orders);
   j.at("settings").get_to(f.settings);
   j.at("tracking").get_to(f.tracking);
+}
+
+inline void to_json(nlohmann::json &j, const AccountPermissions &f) {
+  j = nlohmann::json{
+    {"content", f.content},
+    {"products", f.products},
+    {"customers", f.customers},
+    {"orders", f.orders},
+    {"settings", f.settings},
+    {"tracking", f.tracking}
+  };
 }
 
 } // namespace dto
