@@ -41,21 +41,21 @@ inline void from_json(const nlohmann::json &j, BlogArticle &b) {
     j.at("blog").get_to(b.blog);
 }
 
-inline nlohmann::json to_json(const BlogArticle &b) {
-    nlohmann::json j;
-    j["id"] = b.id;
-    j["createdAt"] = b.createdAt;
-    j["updatedAt"] = b.updatedAt;
-    j["publishedAt"] = b.publishedAt;
-    j["isPublished"] = b.isPublished;
-    j["url"] = b.url;
-    j["title"] = b.title;
-    j["author"] = b.author;
-    j["summary"] = b.summary;
-    j["content"] = b.content;
-    j["language"] = to_json(b.language);
-    j["blog"] = nlohmann::json::parse(b.blog.toJson());
-    return j;
+inline void to_json(nlohmann::json &j, const BlogArticle &b) {
+    j = nlohmann::json{
+        {"id", b.id},
+        {"createdAt", b.createdAt},
+        {"updatedAt", b.updatedAt},
+        {"publishedAt", b.publishedAt},
+        {"isPublished", b.isPublished},
+        {"url", b.url},
+        {"title", b.title},
+        {"author", b.author},
+        {"summary", b.summary},
+        {"content", b.content},
+        {"language", b.language},
+        {"blog", b.blog}
+    };
 }
 
 } // namespace dto
