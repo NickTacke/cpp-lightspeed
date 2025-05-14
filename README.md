@@ -71,7 +71,8 @@ int main() {
 
         auto rateLimitInfo = api.getLastRateLimitInfo();
         std::cout << "--------------------------------" << std::endl;
-        std::cout << "5 minute limit: " << rateLimitInfo.limit5Min.remaining << "/" << rateLimitInfo.limit5Min.limit << std::endl;
+        std::cout << "5 minute limit: " << rateLimitInfo.limit5Min.remaining;
+        std::cout << "/" << rateLimitInfo.limit5Min.limit << std::endl;
         std::cout << "Resets in " << rateLimitInfo.limit5Min.reset << " seconds" << std::endl;
 
     } catch (const std::exception& e) {
