@@ -20,19 +20,6 @@ public:
   Resource<std::vector<AccountMetafield>> metafields;
   Resource<AccountPermissions> permissions;
   Resource<AccountRateLimits> rateLimits;
-
-  std::string toJson() const {
-    nlohmann::json wrapper;
-    wrapper["account"] = {
-      {"id", id},
-      {"appId", appId},
-      {"apiKey", apiKey},
-      {"metafields", metafields.toJson()},
-      {"permissions", permissions.toJson()},
-      {"ratelimit", rateLimits.toJson()}
-    };
-    return wrapper.dump();
-  }
 };
 
 inline void from_json(const nlohmann::json &j, Account &a) {
@@ -42,6 +29,17 @@ inline void from_json(const nlohmann::json &j, Account &a) {
   j.at("metafields").get_to(a.metafields);
   j.at("permissions").get_to(a.permissions);
   j.at("ratelimit").get_to(a.rateLimits);
+}
+
+inline void to_json(nlohmann::json& j, const Account &a) {
+  j = nlohmann::json{
+    {"id", a.id},
+    {"appId", a.appId},
+    {"apiKey", a.apiKey},
+    {"metafields", a.metafields},
+    {"permissions", a.permissions},
+    {"ratelimit", a.rateLimits}
+  };
 }
 
 } // namespace dto
