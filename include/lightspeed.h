@@ -8,7 +8,6 @@
 // Endpoint includes
 #include "endpoints/account.h"
 #include "endpoints/products.h"
-#include "endpoints/webhook.h"
 
 class LightspeedApi {
 public:
@@ -42,7 +41,6 @@ public:
   // Endpoints
   Lightspeed::endpoints::AccountEndpoint account;
   Lightspeed::endpoints::ProductsEndpoint products;
-  Lightspeed::endpoints::WebhookEndpoint webhooks;
 
   // Expose templated resource fetcher publicly
   template<typename T>
