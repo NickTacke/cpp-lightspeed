@@ -1,12 +1,14 @@
 #ifndef LIGHTSPEED_H
 #define LIGHTSPEED_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 
 // Endpoint includes
 #include "endpoints/account.h"
 #include "endpoints/products.h"
+#include "dto/AccountRateLimits.h"
 
 class LightspeedApi {
 public:
@@ -41,11 +43,21 @@ public:
   Lightspeed::endpoints::AccountEndpoint account;
   Lightspeed::endpoints::ProductsEndpoint products;
 
+  // Expose templated resource fetcher publicly
+  template<typename T>
+  T getResource(const Lightspeed::dto::Resource<T>& res);
+
+  // Getter for the last recorded rate limit information
+  const Lightspeed::dto::AccountRateLimits& getLastRateLimitInfo() const {
+    return lastRateLimitInfo_;
+  }
+
 private:
   std::string apiKey_;
   std::string apiSecret_;
   std::string baseUrlHost_;
   std::string baseUrlPath_;
+  Lightspeed::dto::AccountRateLimits lastRateLimitInfo_;
 
   // Helper to construct the full path for a request
   std::string getFullPath(const std::string &endpoint) const;
@@ -58,3 +70,21 @@ private:
 };
 
 #endif
+
+// Inline definition of templated getResource (must live in header)
+#include <nlohmann/json.hpp>
+template<typename T>
+T LightspeedApi::getResource(const Lightspeed::dto::Resource<T>& res) {
+  std::string url = res.url;
+  // Check if url includes ?, if so add .json before it
+  if (url.find("?") != std::string::npos) {
+    url = url.substr(0, url.find("?")) + ".json" + url.substr(url.find("?"));
+  } else {
+    url += ".json";
+  }
+  auto body = performGetRequest(url);
+  nlohmann::json j = nlohmann::json::parse(body);
+  if (j.size() == 1 && (j.begin().value().is_object() || j.begin().value().is_array()))
+    return j.begin().value().template get<T>();
+  return j.template get<T>();
+}

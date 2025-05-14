@@ -1,9 +1,9 @@
 #ifndef LIGHTSPEED_ENDPOINTS_ACCOUNT_H
 #define LIGHTSPEED_ENDPOINTS_ACCOUNT_H
 
-#include "../dtos/Account.h"
-
-class LightspeedApi; // Forward declaration
+// Forward-declare API and include DTO definition
+class LightspeedApi;
+#include "../dto/Account.h"
 
 namespace Lightspeed {
 namespace endpoints {
