@@ -13,17 +13,6 @@ struct RateLimit {
     int remaining;
     int reset;
     std::string resetTime;
-
-    std::string toJson() const {
-      nlohmann::json wrapper;
-      wrapper = {
-        {"limit", limit},
-        {"remaining", remaining},
-        {"reset", reset},
-        {"resetTime", resetTime}
-      };
-      return wrapper.dump();
-    }
 };
 
 inline void from_json(const nlohmann::json &j, RateLimit &r) {
@@ -33,21 +22,20 @@ inline void from_json(const nlohmann::json &j, RateLimit &r) {
   j.at("resetTime").get_to(r.resetTime);
 }
 
+inline void to_json(nlohmann::json &j, const RateLimit &r) {
+  j = nlohmann::json{
+    {"limit", r.limit},
+    {"remaining", r.remaining},
+    {"reset", r.reset},
+    {"resetTime", r.resetTime}
+  };
+}
+
 struct AccountRateLimits {
 public:
   RateLimit limit5Min;
   RateLimit limitHour;
   RateLimit limitDay;
-
-  std::string toJson() const {
-    nlohmann::json wrapper;
-    wrapper["accountRatelimit"] = {
-      {"limit5Min", limit5Min.toJson()},
-      {"limitHour", limitHour.toJson()},
-      {"limitDay", limitDay.toJson()}
-    };
-    return wrapper.dump();
-  }
 };
 
 // Deserializer for single metafield entries
@@ -55,6 +43,14 @@ inline void from_json(const nlohmann::json &j, AccountRateLimits &f) {
   j.at("limit5Min").get_to(f.limit5Min);
   j.at("limitHour").get_to(f.limitHour);
   j.at("limitDay").get_to(f.limitDay);
+}
+
+inline void to_json(nlohmann::json &j, const AccountRateLimits &f) {
+  j = nlohmann::json{
+    {"limit5Min", f.limit5Min},
+    {"limitHour", f.limitHour},
+    {"limitDay", f.limitDay}
+  };
 }
 
 } // namespace dto
