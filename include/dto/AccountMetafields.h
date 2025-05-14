@@ -26,13 +26,14 @@ inline void from_json(const nlohmann::json &j, AccountMetafield &f) {
   j.at("value").get_to(f.value);
 }
 
-struct AccountMetafields {
-  std::vector<AccountMetafield> metafields;
-};
-
-// Deserializer for metafields collection
-inline void from_json(const nlohmann::json &j, AccountMetafields &m) {
-  j.at("accountMetafields").get_to(m.metafields);
+inline void to_json(nlohmann::json &j, const AccountMetafield &f) {
+  j = nlohmann::json{
+    {"id", f.id},
+    {"createdAt", f.createdAt},
+    {"updatedAt", f.updatedAt},
+    {"key", f.key},
+    {"value", f.value}
+  };
 }
 
 } // namespace dto
