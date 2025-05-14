@@ -2,6 +2,10 @@
 #include "lightspeed.h"
 #include "httplib/httplib.h"
 #include <nlohmann/json.hpp>
+#include <vector>
+#include <sstream>
+#include <string>
+#include <stdexcept>
 
 namespace {
 // Helper to parse a full URL into scheme, host and base path
@@ -39,6 +43,28 @@ std::string build_query_params(
     }
   }
   return query_string;
+}
+
+// Helper to parse rate limit header strings like "X/Y/Z" into a vector of integers
+static std::vector<int> parse_rate_limit_values(const std::string& header_value) {
+    std::vector<int> values;
+    if (header_value.empty()) {
+        return values;
+    }
+    std::stringstream ss(header_value);
+    std::string item;
+    while (std::getline(ss, item, '/')) {
+        try {
+            if (!item.empty()) { // Ensure item is not empty before trying to convert
+                values.push_back(std::stoi(item));
+            }
+        } catch (const std::invalid_argument& ia) {
+            std::cerr << "Rate limit parsing warning: Invalid number '" << item << "' in header value '" << header_value << "'. " << ia.what() << std::endl;
+        } catch (const std::out_of_range& oor) {
+            std::cerr << "Rate limit parsing warning: Number '" << item << "' out of range in header value '" << header_value << "'. " << oor.what() << std::endl;
+        }
+    }
+    return values;
 }
 
 } // namespace
@@ -129,8 +155,35 @@ std::string LightspeedApi::performRequest(
 
   // Check the response code
   if (result->status >= 200 && result->status < 300) {
-    // TODO: Remove after debugging
-    std::cout << "Response body: " << result->body << std::endl;
+    // Print response headers
+    std::cout << "Response headers:" << std::endl;
+    for (const auto &header : result->headers) {
+      std::cout << header.first << ": " << header.second << std::endl;
+    }
+    
+    // Parse and store rate limit information
+    std::string rate_limit_limit_str = result->get_header_value("X-RateLimit-Limit");
+    std::string rate_limit_remaining_str = result->get_header_value("X-RateLimit-Remaining");
+    std::string rate_limit_reset_str = result->get_header_value("X-RateLimit-Reset");
+
+    std::vector<int> limits = parse_rate_limit_values(rate_limit_limit_str);
+    std::vector<int> remaining_values = parse_rate_limit_values(rate_limit_remaining_str);
+    std::vector<int> reset_values = parse_rate_limit_values(rate_limit_reset_str);
+
+    // Populate AccountRateLimits structure
+    // Assuming the order in headers is 5min, 1hour, 1day
+    if (limits.size() >= 1) this->lastRateLimitInfo_.limit5Min.limit = limits[0];
+    if (limits.size() >= 2) this->lastRateLimitInfo_.limitHour.limit = limits[1];
+    if (limits.size() >= 3) this->lastRateLimitInfo_.limitDay.limit = limits[2];
+
+    if (remaining_values.size() >= 1) this->lastRateLimitInfo_.limit5Min.remaining = remaining_values[0];
+    if (remaining_values.size() >= 2) this->lastRateLimitInfo_.limitHour.remaining = remaining_values[1];
+    if (remaining_values.size() >= 3) this->lastRateLimitInfo_.limitDay.remaining = remaining_values[2];
+
+    if (reset_values.size() >= 1) this->lastRateLimitInfo_.limit5Min.reset = reset_values[0];
+    if (reset_values.size() >= 2) this->lastRateLimitInfo_.limitHour.reset = reset_values[1];
+    if (reset_values.size() >= 3) this->lastRateLimitInfo_.limitDay.reset = reset_values[2];
+
     return result->body;
   } else {
     std::cerr << "Unsupported response code: " << result->status << std::endl;
