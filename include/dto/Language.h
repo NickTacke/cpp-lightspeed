@@ -25,15 +25,15 @@ inline void from_json(const nlohmann::json &j, Language &l) {
     j.at("title").get_to(l.title);
 }
 
-inline nlohmann::json to_json(const Language &l) {
-    return nlohmann::json({
+inline void to_json(nlohmann::json &j, const Language &l) {
+    j = nlohmann::json{
         {"id", l.id},
         {"isActive", l.isActive},
         {"isDefault", l.isDefault},
         {"code", l.code},
         {"locale", l.locale},
         {"title", l.title}
-    });
+    };
 }
 
 } // namespace dto
