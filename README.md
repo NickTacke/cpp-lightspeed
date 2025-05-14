@@ -69,9 +69,10 @@ int main() {
             std::cout << "Stock level: " << variant.stockLevel << std::endl;
         }
 
+        auto rateLimitInfo = api.getLastRateLimitInfo();
         std::cout << "--------------------------------" << std::endl;
-        std::cout << "5 minute limit: " << api.getLastRateLimitInfo().limit5Min.remaining << "/" << api.getLastRateLimitInfo().limit5Min.limit << std::endl;
-        std::cout << "Resets in " << api.getLastRateLimitInfo().limit5Min.reset << " seconds" << std::endl;
+        std::cout << "5 minute limit: " << rateLimitInfo.limit5Min.remaining << "/" << rateLimitInfo.limit5Min.limit << std::endl;
+        std::cout << "Resets in " << rateLimitInfo.limit5Min.reset << " seconds" << std::endl;
 
     } catch (const std::exception& e) {
         std::cerr << "An error occurred: " << e.what() << std::endl;
