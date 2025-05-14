@@ -14,13 +14,13 @@ struct Product; // Forward declaration
 enum Tracking {
     DISABLED,
     ENABLED,
-    INDICATED
+    INDICATOR
 };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(Tracking, {
     {Tracking::DISABLED, "disabled"},
     {Tracking::ENABLED, "enabled"},
-    {Tracking::INDICATED, "indicated"}
+    {Tracking::INDICATOR, "indicator"}
 })
 
 enum WeightUnit {
