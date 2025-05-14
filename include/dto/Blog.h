@@ -34,6 +34,18 @@ inline void from_json(const nlohmann::json &j, Blog &b) {
     j.at("title").get_to(b.title);
 }
 
+inline void to_json(nlohmann::json &j, const Blog &b) {
+    j = nlohmann::json{
+        {"id", b.id},
+        {"createdAt", b.createdAt},
+        {"updatedAt", b.updatedAt},
+        {"sortOrder", b.sortOrder},
+        {"commentable", b.commentable},
+        {"url", b.url},
+        {"title", b.title}
+    };
+}
+
 } // namespace dto
 } // namespace Lightspeed
 
